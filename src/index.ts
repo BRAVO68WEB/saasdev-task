@@ -1,23 +1,24 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import express from 'express'
-import { auth } from 'express-openid-connect';
-import cors from 'cors';
-import path from 'path';
+import path from "node:path";
+
+import cors from "cors";
+import express from "express";
+import { auth } from "express-openid-connect";
+import morgan from "morgan";
 
 import "./config/env";
-import "./helpers/connectDB";
+import "./helpers/connectDb";
 
+import { config } from "./config/authConfig";
 import { route } from "./routes";
-import { config } from './config/authConfig';
-import morgan from 'morgan';
 
 const server = express();
 
 const __dirname = path.resolve();
 
-server.set('view engine', 'ejs');
-server.set("views", path.join(__dirname + '/src/', "views"));
+server.set("view engine", "ejs");
+server.set("views", path.join(__dirname + "/src/", "views"));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(morgan("dev"));
@@ -27,8 +28,8 @@ server.use(
         origin: "*",
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
-        maxAge: 86400,
-    })
+        maxAge: 86_400,
+    }),
 );
 
 server.use(
@@ -40,7 +41,7 @@ server.use(
         },
         clientSecret: process.env.CLIENT_SECRET,
         // idTokenSigningAlg: "",
-    })
+    }),
 );
 
 server.use("/", route);

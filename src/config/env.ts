@@ -1,8 +1,9 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 declare global {
     namespace NodeJS {
-        interface ProcessEnv extends z.infer<typeof envSchema> { }
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface ProcessEnv extends z.infer<typeof envSchema> {}
     }
 }
 
@@ -14,7 +15,7 @@ const envSchema = z.object({
     MONGO_URI: z.string(),
     ISSUER_URL: z.string(),
     BASEURL: z.string(),
-})
+});
 
 envSchema.parse(process.env);
 

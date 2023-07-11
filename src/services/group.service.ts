@@ -1,5 +1,6 @@
-import Group from '../models/group.model';
-import User from '../models/user.model';
+import App from "../models/app.model";
+import Group from "../models/group.model";
+import User from "../models/user.model";
 
 export default class GroupService {
     async getGroups() {
@@ -11,7 +12,19 @@ export default class GroupService {
     }
 
     async getGroupById(id: string) {
-        return Group.findById(id);
+        const groupInfo = await Group.findById(id);
+        if (!groupInfo) {
+            throw new Error("Group not found");
+        }
+        const authorizedApps = await App.find({ authorizedGroups: id }).exec();
+        return {
+            ...groupInfo.view(true),
+            apps: authorizedApps.map(app => app.view(true)),
+        };
+    }
+
+    async removeGroup(id: string) {
+        return Group.findByIdAndDelete(id);
     }
 
     async create(group: any) {
@@ -40,7 +53,7 @@ export default class GroupService {
                 throw new Error("Some users were not found");
             }
 
-            const usersToAdd = users.filter((user) => !checkIfGroupExists.users.includes(user.id));
+            const usersToAdd = users.filter(user => !checkIfGroupExists.users.includes(user.id));
 
             if (usersToAdd.length === 0) {
                 throw new Error("All users are already in the group");
@@ -51,10 +64,9 @@ export default class GroupService {
             await checkIfGroupExists.save();
 
             return checkIfGroupExists.view(true);
-        }
-        catch (err: any) {
-            console.log(err);
-            throw new Error(err);
+        } catch (error: any) {
+            console.log(error);
+            throw new Error(error);
         }
     }
 
@@ -72,21 +84,22 @@ export default class GroupService {
                 throw new Error("Some users were not found");
             }
 
-            const usersToRemove = users.filter((user) => checkIfGroupExists.users.includes(user.id));
+            const usersToRemove = users.filter(user => checkIfGroupExists.users.includes(user.id));
 
             if (usersToRemove.length === 0) {
                 throw new Error("None of the users are in the group");
             }
 
-            checkIfGroupExists.users = checkIfGroupExists.users.filter((userId) => !userIds.includes(userId));
+            checkIfGroupExists.users = checkIfGroupExists.users.filter(
+                userId => !userIds.includes(userId),
+            );
 
             await checkIfGroupExists.save();
 
             return checkIfGroupExists.view(true);
-        }
-        catch (err: any) {
-            console.log(err);
-            throw new Error(err);
+        } catch (error: any) {
+            console.log(error);
+            throw new Error(error);
         }
     }
 }

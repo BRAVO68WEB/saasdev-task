@@ -1,3 +1,7 @@
 {
+    "compilerOptions": {
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
     "extends": "@bravo68web/tsconfig/base.json"
 }

@@ -1,31 +1,25 @@
 import mongoose, { Schema } from "mongoose";
 
-export interface IGroup {
-    id: string;
-    name: string;
-    users: string[];
-    source: string;
-    createdAt: Date;
-    updatedAt: Date;
-
-    view(full: boolean): any;
-}
-
-const groupSchema = new Schema({
-    name: {
-        type: String,
+const groupSchema = new Schema(
+    {
+        name: {
+            type: String,
+        },
+        users: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
+        source: {
+            type: Schema.Types.ObjectId,
+            ref: "Source",
+        },
     },
-    users: [{
-        type: Schema.Types.ObjectId,
-        ref: "User",
-    }],
-    source: {
-        type: Schema.Types.ObjectId,
-        ref: "Source",
+    {
+        timestamps: true,
     },
-}, {
-    timestamps: true
-});
+);
 
 groupSchema.methods = {
     view(full: boolean) {
@@ -38,10 +32,12 @@ groupSchema.methods = {
             updatedAt: this.updatedAt,
         };
 
-        return full ? {
-            ...view,
-        } : view;
-    }
+        return full
+            ? {
+                  ...view,
+              }
+            : view;
+    },
 };
 
 export default mongoose.model<IGroup>("Group", groupSchema);
