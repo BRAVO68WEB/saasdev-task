@@ -1,5 +1,14 @@
 {
     "extends": "@bravo68web/eslint-config/backend",
     "rules": {
+        "unicorn/filename-case": [
+            "error",
+            {
+                "case": {
+                    "camelCase": true,
+                    "snakeCase": true
+                }
+            }
+        ]
     }
 }
