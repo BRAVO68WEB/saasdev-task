@@ -65,7 +65,6 @@ export default class GroupService {
 
             return checkIfGroupExists.view(true);
         } catch (error: any) {
-            console.log(error);
             throw new Error(error);
         }
     }
@@ -98,7 +97,6 @@ export default class GroupService {
 
             return checkIfGroupExists.view(true);
         } catch (error: any) {
-            console.log(error);
             throw new Error(error);
         }
     }
