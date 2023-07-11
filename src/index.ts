@@ -1,12 +1,16 @@
 import 'dotenv/config'
+
 import express from 'express'
+import { auth } from 'express-openid-connect';
+import cors from 'cors';
+import path from 'path';
 
 import "./config/env";
-import { app } from "./routes";
-import cors from 'cors';
+import "./helpers/connectDB";
+
+import { route } from "./routes";
 import { config } from './config/authConfig';
-import { auth } from 'express-openid-connect';
-import path from 'path';
+import morgan from 'morgan';
 
 const server = express();
 
@@ -14,7 +18,9 @@ const __dirname = path.resolve();
 
 server.set('view engine', 'ejs');
 server.set("views", path.join(__dirname + '/src/', "views"));
+server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+server.use(morgan("dev"));
 
 server.use(
     cors({
@@ -25,9 +31,19 @@ server.use(
     })
 );
 
-server.use(auth(config));
+server.use(
+    auth({
+        ...config,
+        routes: {
+            login: false,
+            postLogoutRedirect: "/",
+        },
+        clientSecret: process.env.CLIENT_SECRET,
+        // idTokenSigningAlg: "",
+    })
+);
 
-server.use("/", app);
+server.use("/", route);
 
 server.listen(3000);
 

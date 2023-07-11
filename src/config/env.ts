@@ -11,6 +11,9 @@ const envSchema = z.object({
     CLIENT_ID: z.string(),
     CLIENT_SECRET: z.string(),
     REDIRECT_URI: z.string(),
+    MONGO_URI: z.string(),
+    ISSUER_URL: z.string(),
+    BASEURL: z.string(),
 })
 
 envSchema.parse(process.env);
