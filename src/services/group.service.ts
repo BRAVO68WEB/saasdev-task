@@ -4,11 +4,20 @@ import User from "../models/user.model";
 
 export default class GroupService {
     async getGroups() {
-        return Group.find();
+        const groups = await Group.find()
+            .then(groups => groups.map(group => group.view(true)))
+
+        return groups;
     }
 
     async getGroup(name: string) {
-        return Group.findOne({ name });
+        const group = await Group.findOne({ name })
+            
+        if (!group) {
+            throw new Error("Group not found");
+        }
+
+        return group.view(true);
     }
 
     async getGroupById(id: string) {
@@ -24,7 +33,11 @@ export default class GroupService {
     }
 
     async removeGroup(id: string) {
-        return Group.findByIdAndDelete(id);
+        const group = await Group.findByIdAndDelete(id);
+        if (!group) {
+            throw new Error("Group not found");
+        }
+        return group.view(true);
     }
 
     async create(group: any) {

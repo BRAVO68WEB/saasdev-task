@@ -62,8 +62,8 @@ export default class GroupController extends GroupService {
 
     public remove = async (req: Request, res: Response) => {
         try {
-            const { id } = req.params;
-            const group = await this.removeGroup(id);
+            const { group_id } = req.body;
+            const group = await this.removeGroup(group_id);
             return res.json(group);
         } catch (error: any) {
             return res.status(500).json({
