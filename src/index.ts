@@ -40,7 +40,6 @@ server.use(
             postLogoutRedirect: "/",
         },
         clientSecret: process.env.CLIENT_SECRET,
-        // idTokenSigningAlg: "",
     }),
 );
 
