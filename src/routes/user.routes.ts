@@ -8,5 +8,6 @@ const user = Router();
 user.get("/", userController.getUsers);
 user.get("/:id", userController.getUserInfo);
 user.post("/", userController.addNewUser);
+user.delete("/:id", userController.remove);
 
 export default user;

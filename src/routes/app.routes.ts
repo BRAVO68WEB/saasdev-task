@@ -15,4 +15,6 @@ app.post("/removeUser", authMiddleware, userController.removeUserFromApp);
 app.post("/addGroup", authMiddleware, userController.addGroupToApp);
 app.post("/removeGroup", authMiddleware, userController.removeGroupFromApp);
 
+app.delete("/", authMiddleware, userController.delete);
+
 export default app;

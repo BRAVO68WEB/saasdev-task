@@ -28,4 +28,10 @@ export default class UserController extends UserService {
         const user = await this.create(req.body);
         return res.json(user);
     };
+
+    public remove = async (req: Request, res: Response) => {
+        const { id } = req.params;
+        const user = await this.delete(id);
+        return res.json(user);
+    }
 }

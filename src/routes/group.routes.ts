@@ -10,5 +10,7 @@ group.get("/", authMiddleware, groupController.listGroups);
 group.get("/:id", authMiddleware, groupController.getGroupInfo);
 group.post("/", authMiddleware, groupController.addGroup);
 group.post("/addUser", authMiddleware, groupController.addUserToGroup);
+group.post("/removeUser", authMiddleware, groupController.removeUserFromGroup);
+group.delete("/", authMiddleware, groupController.remove);
 
 export default group;

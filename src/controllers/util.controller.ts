@@ -1,4 +1,5 @@
 import UserService from "../services/user.service";
+import UtilService from "../services/utils.service";
 
 export default class UtilsController {
     public static getHealth(_req: any, res: any) {
@@ -30,6 +31,19 @@ export default class UtilsController {
             }
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    public static async checkUserToAppConn(req: any, res: any) {
+        try {
+            const check = await UtilService.checkIfUserHasAppAccess(req.body.email, req.body.app_name);
+            return res.json({
+                access: check,
+            });
+        } catch (error: any) {
+            res.status(500).json({
+                error: error.message,
+            })
         }
     }
 }

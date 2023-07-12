@@ -88,4 +88,15 @@ export default class AppController extends AppService {
             });
         }
     };
+
+    public delete = async (req: ModRequest, res: Response) => {
+        try {
+            const app = await this.deleteApp(req.body.app_id);
+            return res.json(app);
+        } catch (error: any) {
+            return res.status(500).json({
+                error: error.message,
+            });
+        }
+    }
 }

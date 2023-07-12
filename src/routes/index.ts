@@ -16,7 +16,6 @@ route.get("/login", (_req: Request, res: Response) => {
 route.get("/user", UtilsController.userInfo);
 
 route.get("/", (req: Request, res: Response) => {
-    console.log(req.oidc.isAuthenticated());
     res.render("index", {
         isAuthenticated: req.oidc.isAuthenticated(),
         user: req.oidc.user,
@@ -25,6 +24,8 @@ route.get("/", (req: Request, res: Response) => {
 });
 
 route.get("/health", UtilsController.getHealth);
+
+route.post("/checkUserToAppConn", UtilsController.checkUserToAppConn);
 
 route.use("/apps", app);
 route.use("/users", user);
