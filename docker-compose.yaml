@@ -1,33 +1,33 @@
-version: '3.1'
+version: "3.1"
 
 services:
-  database:
-    image: mongo:latest
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    database:
+        image: mongo:latest
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+            MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
 
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    environment:
-      PORT: ${PORT}
-      CLIENT_ID: ${CLIENT_ID}
-      CLIENT_SECRET: ${CLIENT_SECRET}
-      REDIRECT_URI: ${REDIRECT_URI}
-      BASEURL: ${BASEURL}
-      ISSUER_URL: ${ISSUER_URL}
-      MONGO_URI: ${MONGO_URI}
-    ports:
-      - ${DOCKER_PORT}:${PORT}
-    depends_on:
-      - database
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        environment:
+            PORT: ${PORT}
+            CLIENT_ID: ${CLIENT_ID}
+            CLIENT_SECRET: ${CLIENT_SECRET}
+            REDIRECT_URI: ${REDIRECT_URI}
+            BASEURL: ${BASEURL}
+            ISSUER_URL: ${ISSUER_URL}
+            MONGO_URI: ${MONGO_URI}
+        ports:
+            - ${DOCKER_PORT}:${PORT}
+        depends_on:
+            - database
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:${PORT}/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 5

@@ -36,14 +36,17 @@ export default class UtilsController {
 
     public static async checkUserToAppConn(req: any, res: any) {
         try {
-            const check = await UtilService.checkIfUserHasAppAccess(req.body.email, req.body.app_name);
+            const check = await new UtilService().checkIfUserHasAppAccess(
+                req.body.email,
+                req.body.app_name,
+            );
             return res.json({
                 access: check,
             });
         } catch (error: any) {
             res.status(500).json({
                 error: error.message,
-            })
+            });
         }
     }
 }

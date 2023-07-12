@@ -8,8 +8,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-- Node v18.16.1
-- pnpm v8.6.2
+-   Node v18.16.1
+-   pnpm v8.6.2
 
 ### Installing
 
@@ -41,15 +41,13 @@ pnpm dev
 
 ## Technologies
 
-- [Express](https://expressjs.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [Auth0](https://auth0.com/)
-- [MongoDB](https://www.mongodb.com/)
-- [pnpm](https://pnpm.io/)
-- [TypeScript](https://www.typescriptlang.org/)
+-   [Express](https://expressjs.com/)
+-   [Mongoose](https://mongoosejs.com/)
+-   [Auth0](https://auth0.com/)
+-   [MongoDB](https://www.mongodb.com/)
+-   [pnpm](https://pnpm.io/)
+-   [TypeScript](https://www.typescriptlang.org/)
 
 ## Author
 
-- **Bravo68web** - [GitHub](https://github.com/BRAVO68WEB)
-
-
+-   **Bravo68web** - [GitHub](https://github.com/BRAVO68WEB)

@@ -4,15 +4,12 @@ import User from "../models/user.model";
 
 export default class GroupService {
     async getGroups() {
-        const groups = await Group.find()
-            .then(groups => groups.map(group => group.view(true)))
-
-        return groups;
+        return await Group.find().then(groups => groups.map(group => group.view(true)));
     }
 
     async getGroup(name: string) {
-        const group = await Group.findOne({ name })
-            
+        const group = await Group.findOne({ name });
+
         if (!group) {
             throw new Error("Group not found");
         }

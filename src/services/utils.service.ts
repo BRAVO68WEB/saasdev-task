@@ -1,23 +1,26 @@
-import User from '../models/user.model';
-import App from '../models/app.model';
-import Group from '../models/group.model';
+import App from "../models/app.model";
+import Group from "../models/group.model";
+import User from "../models/user.model";
 
 export default class UtilService {
-    static async checkIfUserHasAppAccess(user: string, app: string) {
+    async checkIfUserHasAppAccess(user: string, app: string) {
         const cheeckUser = await User.findOne({
             email: user,
         });
         if (!cheeckUser) {
-            throw new Error('User not found');
+            throw new Error("User not found");
         }
         const checkApp = await App.findOne({
             name: app,
         });
         if (!checkApp) {
-            throw new Error('App not found');
+            throw new Error("App not found");
         }
 
-        const authorizedAppsAsUser = await App.find({ authorizedUsers: cheeckUser.id, name: app }).exec();
+        const authorizedAppsAsUser = await App.find({
+            authorizedUsers: cheeckUser.id,
+            name: app,
+        }).exec();
 
         const userGroups = await Group.find({ users: cheeckUser.id }).exec();
         const authorizedAppsAsGroup = await App.find({
@@ -26,10 +29,6 @@ export default class UtilService {
         }).exec();
         const authorizedApps = [...authorizedAppsAsUser, ...authorizedAppsAsGroup];
 
-        if (authorizedApps.length === 0) {
-            return false;
-        }
-
-        return true;
+        return authorizedApps.length === 0 ? false : true;
     }
 }

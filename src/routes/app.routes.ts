@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import AppController from "../controllers/app.controller";
 import validate from "../validations";
-import { createAppInput, modifyAppInput, deleteAppInput } from "../validations/app.validation";
+import { createAppInput, deleteAppInput, modifyAppInput } from "../validations/app.validation";
 
 const userController = new AppController();
 const app = Router();

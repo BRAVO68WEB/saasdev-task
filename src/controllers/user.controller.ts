@@ -33,5 +33,5 @@ export default class UserController extends UserService {
         const { id } = req.params;
         const user = await this.delete(id);
         return res.json(user);
-    }
+    };
 }

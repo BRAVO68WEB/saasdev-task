@@ -18,7 +18,7 @@ const createUserInputSchema = {
             required_error: "Source is required!",
         }),
     }),
-  };
-  
+};
+
 export const createUserInput = object(createUserInputSchema);
 export type CreateUserInput = TypeOf<typeof createUserInput>;

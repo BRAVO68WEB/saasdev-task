@@ -1,13 +1,12 @@
 import { Request, Response, Router } from "express";
 
 import UtilsController from "../controllers/util.controller";
-import app from "./app.routes";
-import group from "./group.routes";
-import user from "./user.routes";
-
 import authMiddleware from "../middlewares/auth.middleware";
 import validate from "../validations";
 import { checkAccessInput } from "../validations/utils.validation";
+import app from "./app.routes";
+import group from "./group.routes";
+import user from "./user.routes";
 
 export const route = Router();
 

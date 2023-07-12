@@ -13,20 +13,24 @@ const modifyGroupInputSchema = {
         group_id: string({
             required_error: "group_id is required!",
         }),
-        users: array(string({
-            required_error: "users is required!",
-        })).optional().nullable(),
+        users: array(
+            string({
+                required_error: "users is required!",
+            }),
+        )
+            .optional()
+            .nullable(),
     }),
-}
+};
 
 const deleteGroupInputSchema = {
     body: object({
         group_id: string({
             required_error: "group_id is required!",
-        })
+        }),
     }),
-}
-  
+};
+
 export const createGroupInput = object(createGroupInputSchema);
 export type CreateGroupInput = TypeOf<typeof createGroupInput>;
 

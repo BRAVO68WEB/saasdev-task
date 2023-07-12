@@ -4,7 +4,7 @@ const createAppInputSchema = {
     body: object({
         name: string({
             required_error: "name is required!",
-        })
+        }),
     }),
 };
 
@@ -13,12 +13,20 @@ const modifyAppInputSchema = {
         app_id: string({
             required_error: "app_id is required!",
         }),
-        users: array(string({
-            required_error: "users is required!",
-        })).optional().nullable(),
-        groups: array(string({
-            required_error: "groups is required!",
-        })).optional().nullable(),
+        users: array(
+            string({
+                required_error: "users is required!",
+            }),
+        )
+            .optional()
+            .nullable(),
+        groups: array(
+            string({
+                required_error: "groups is required!",
+            }),
+        )
+            .optional()
+            .nullable(),
     }),
 };
 
@@ -26,7 +34,7 @@ const deleteAppInputSchema = {
     body: object({
         app_id: string({
             required_error: "app_id is required!",
-        })
+        }),
     }),
 };
 

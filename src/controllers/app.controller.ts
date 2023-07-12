@@ -98,5 +98,5 @@ export default class AppController extends AppService {
                 error: error.message,
             });
         }
-    }
+    };
 }

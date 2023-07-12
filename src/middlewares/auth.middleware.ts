@@ -21,7 +21,7 @@ const authMiddleware = (req: ModRequest, res: Response, next: NextFunction) => {
         } else {
             throw new Error("Unauthorized");
         }
-    } catch (error) {
+    } catch {
         return res.status(401).json({
             status: "error",
             message: "Unauthorized",

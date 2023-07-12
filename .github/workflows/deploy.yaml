@@ -14,8 +14,8 @@ jobs:
               uses: shimataro/ssh-key-action@v2
               with:
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
-                  known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-            
+                  known_hosts: "just-a-placeholder-so-we-dont-get-errors"
+
             - name: Adding Known Hosts
               run: ssh-keyscan -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
@@ -24,5 +24,5 @@ jobs:
 
             - name: Sleep for 10 secs and Test Deployment
               run: |
-                    sleep 10
-                    curl --location --request GET https://saasden-task.b68web.xyz/health
+                  sleep 10
+                  curl --location --request GET https://saasden-task.b68web.xyz/health

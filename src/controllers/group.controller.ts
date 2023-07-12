@@ -70,5 +70,5 @@ export default class GroupController extends GroupService {
                 error: error.message,
             });
         }
-    }
+    };
 }

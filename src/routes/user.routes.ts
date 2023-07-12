@@ -1,8 +1,8 @@
 import { Router } from "express";
 
 import UserController from "../controllers/user.controller";
-import { createUserInput } from "../validations/user.validation";
 import validate from "../validations";
+import { createUserInput } from "../validations/user.validation";
 
 const userController = new UserController();
 const user = Router();
