@@ -24,7 +24,7 @@ export default class UtilsController {
                     firstname: userInfo.given_name,
                     username: userInfo.nickname,
                     lastname: userInfo.family_name,
-                    source: "oidc",
+                    source: "azureAD",
                 });
 
                 return res.json(user);
