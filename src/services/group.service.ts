@@ -4,28 +4,44 @@ import User from "../models/user.model";
 
 export default class GroupService {
     async getGroups() {
-        return await Group.find().then(groups => groups.map(group => group.view(true)));
-    }
+        let groups : any = await Group.find()
+            .populate("source")
+            .select("-createdAt -updatedAt")
+            .then(groups => groups.map(group => {
+                return {
+                    ...group.view(true),
+                    source: group.source.name
+                }
+            })
+        );
 
-    async getGroup(name: string) {
-        const group = await Group.findOne({ name });
+        groups = await Promise.all(
+            groups.map(async (group: any) => {
+                const usersInGroup = await User.find({ _id: { $in: group.emps } }).select("-source -createdAt -updatedAt").then(users => users.map(user => user.view(true)));
+                return {
+                    ...group,
+                    emps: usersInGroup
+                }
+            })
+        );
 
-        if (!group) {
-            throw new Error("Group not found");
-        }
-
-        return group.view(true);
+        return groups;
     }
 
     async getGroupById(id: string) {
-        const groupInfo = await Group.findById(id);
+        const groupInfo = await Group.findById(id)
+            .populate("source")
+            .select("-createdAt -updatedAt")
         if (!groupInfo) {
             throw new Error("Group not found");
         }
-        const authorizedApps = await App.find({ authorizedGroups: id }).exec();
+        const authorizedApps = await App.find({ authorizedGroups: id }).select("id name");
+        const usersInGroup = await User.find({ _id: { $in: groupInfo.users } }).select("-source -createdAt -updatedAt").then(users => users.map(user => user.view(true)));
         return {
             ...groupInfo.view(true),
             apps: authorizedApps.map(app => app.view(true)),
+            source: groupInfo.source.name,
+            emps: usersInGroup
         };
     }
 
@@ -37,8 +53,8 @@ export default class GroupService {
         return group.view(true);
     }
 
-    async create(group: any) {
-        const { name, users, source } = group;
+    async create(group: any, source: string) {
+        const { name, users } = group;
 
         const newGroup = new Group({
             name,

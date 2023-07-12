@@ -23,8 +23,39 @@ export default class UserService {
     }
 
     public async list(limit = "10", skip = "0") {
-        const users = await User.find().limit(Number(limit)).skip(Number(skip)).exec();
-        return users.map(user => user.view(true));
+        const users = await User.find()
+            .limit(Number(limit)).skip(Number(skip))
+            .select("-createdAt -updatedAt")
+            .populate("source")
+            .then(users => users.map(user => {
+                return {
+                    ...user.view(true),
+                    source: user.source.name
+                }
+            })
+        );
+        
+        const usersWithApps = await Promise.all(
+            users.map(async (user: any) => {
+                const authorizedAppsAsUser = await App.find({ authorizedUsers: user.id });
+                const userGroups = await Group.find({ users: user.id }).exec();
+                const authorizedAppsAsGroup = await App.find({
+                    authorizedGroups: { $in: userGroups.map(group => group.id) },
+                }).exec();
+                const authorizedApps = [...authorizedAppsAsUser, ...authorizedAppsAsGroup];
+                return {
+                    ...user,
+                    apps: authorizedApps.map(app => {
+                        return {
+                            id: app._id,
+                            name: app.name,
+                        }
+                    }),
+                }
+            }
+        ));
+
+        return usersWithApps;
     }
 
     public async get(id: string) {

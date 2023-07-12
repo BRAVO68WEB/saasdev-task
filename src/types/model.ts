@@ -4,7 +4,8 @@ interface IGroup {
     id: string;
     name: string;
     users: string[];
-    source: string;
+    emps?: string[];
+    source: any;
     createdAt: Date;
     updatedAt: Date;
 
@@ -23,7 +24,7 @@ interface ISource {
 interface IApp {
     id: string;
     name: string;
-    source: string;
+    source: any;
     authorizedUsers: string[];
     authorizedGroups: string[];
     createdAt: Date;
@@ -38,7 +39,7 @@ interface IUser {
     firstname: string;
     lastname: string;
     username: string;
-    source: string;
+    source: any;
     createdAt: Date;
     updatedAt: Date;
 

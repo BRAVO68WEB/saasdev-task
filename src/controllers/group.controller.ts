@@ -2,11 +2,14 @@ import { Request, Response } from "express";
 
 import { ModRequest } from "../middlewares/auth.middleware";
 import GroupService from "../services/group.service";
+import UserService from "../services/user.service";
 
 export default class GroupController extends GroupService {
     public addGroup = async (req: ModRequest, res: Response) => {
         try {
-            const group = await this.create(req.body);
+            const currentUser = await new UserService().getByEmail(req.user.email);
+            if (!currentUser) throw new Error("User not found");
+            const group = await this.create(req.body, currentUser.source);
             return res.json(group);
         } catch (error: any) {
             return res.status(500).json({

@@ -30,19 +30,110 @@ export default class AppService {
     };
 
     public listApps = async (limit = "10", skip = "0") => {
-        const apps = await App.find().limit(Number(limit)).skip(Number(skip)).exec();
-        return apps.map(app => app.view(true));
+        let apps: any = await App.find().limit(Number(limit)).skip(Number(skip))
+            .select("-createdAt -updatedAt").populate("source")
+            .then(apps => apps.map(app => app.view(true)));
+        apps = await Promise.all(
+            apps.map(async (app: any) => {
+                const source = await Source.getSourceById(app.source);
+                let usersInApp = await User.find({ _id: { $in: app.authorizedUsers } })
+                    .select("-createdAt -updatedAt").populate("source")
+                    .then(users => users.map(user => user.view(true)));
+                const groupsInApp = await Group.find({ _id: { $in: app.authorizedGroups } })
+                    .select("-createdAt -updatedAt").populate("source")
+                    .then(groups => groups.map(group => group.view(true)));
+
+                const usersFromGroups = await Promise.all(
+                    groupsInApp.map(async (group: any) => {
+                        const usersInGroup = await User.find({ _id: { $in: group.emps } })
+                            .select("-createdAt -updatedAt")
+                            .populate("source")
+                            .then(users => users.map(user => {
+                                return {
+                                    ...user.view(true),
+                                    source: user.source?.name
+                                }
+                            }));
+                        return usersInGroup;
+                    })
+                )
+
+                usersInApp = [...usersInApp, ...usersFromGroups.flat()];
+                
+                delete app.authorizedUsers;
+                delete app.authorizedGroups;
+
+                return {
+                    ...app,
+                    source: {
+                        id: source?._id,
+                        name: source?.name,
+                    },
+                    emps: usersInApp,
+                };
+            }),
+        );
+        return apps;
     };
 
     public getApp = async (id: string) => {
-        const app = await App.findById(id)
+        let app: any = await App.findById(id)
             .populate("authorizedUsers")
             .populate("authorizedGroups")
+            .populate("source")
             .exec();
         if (!app) {
             throw new Error("App not found");
         }
-        return app.view(true);
+        
+        const source = await Source.getSourceById(app.source);
+
+        let usersInApp = await User.find({ _id: { $in: app.authorizedUsers } })
+            .select("-createdAt -updatedAt").populate("source")
+            .then(users => users.map(user => {
+                return {
+                    ...user.view(true),
+                    source: user.source?.name
+                }
+            }));
+        
+        const groupsInApp = await Group.find({ _id: { $in: app.authorizedGroups } })
+            .select("-createdAt -updatedAt").populate("source")
+            .then(groups => groups.map(group => group.view(true)));
+
+        const usersFromGroups = await Promise.all(
+            groupsInApp.map(async (group: any) => {
+                const usersInGroup = await User.find({ _id: { $in: group.emps } })
+                    .select("-createdAt -updatedAt")
+                    .populate("source")
+                    .then(users => users.map(user => {
+                        return {
+                            ...user.view(true),
+                            source: user.source?.name
+                        }
+                    }));
+                return usersInGroup;
+            })
+        )
+
+        usersInApp = [...usersInApp, ...usersFromGroups.flat()];
+        
+        const originalApp = app.view(true);
+
+        delete originalApp.authorizedUsers;
+        delete originalApp.authorizedGroups;
+        delete originalApp.id;
+        delete originalApp.createdAt;
+        delete originalApp.updatedAt;
+
+        return {
+            ...originalApp,
+            source: {
+                id: source?._id,
+                name: source?.name,
+            },
+            emps: usersInApp,
+        }
     };
 
     public addUsersToApp = async (appId: string, userIds: string[]) => {

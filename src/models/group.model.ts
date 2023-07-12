@@ -24,9 +24,9 @@ const groupSchema = new Schema(
 groupSchema.methods = {
     view(full: boolean) {
         const view = {
-            id: this._id,
+            groupId: this._id,
             name: this.name,
-            users: this.users,
+            emps: this.users,
             source: this.source,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
