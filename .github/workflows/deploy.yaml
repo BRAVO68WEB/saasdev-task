@@ -22,7 +22,7 @@ jobs:
             - name: Copy code to server
               run: ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} "./saasden-dev-deploy.sh"
 
-            - name: Sleep for 25 secs and Test Deployment
+            - name: Sleep for 10 secs and Test Deployment
               run: |
                     sleep 10
                     curl --location --request GET https://saasden-task.b68web.xyz/health
