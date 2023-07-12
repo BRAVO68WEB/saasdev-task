@@ -16,5 +16,8 @@ COPY . .
 # Build
 RUN pnpm run build
 
+# Expose port
+EXPOSE 4000
+
 # Run
 CMD ["pnpm", "start"]
