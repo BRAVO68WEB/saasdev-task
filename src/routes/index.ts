@@ -6,6 +6,8 @@ import group from "./group.routes";
 import user from "./user.routes";
 
 import authMiddleware from "../middlewares/auth.middleware";
+import validate from "../validations";
+import { checkAccessInput } from "../validations/utils.validation";
 
 export const route = Router();
 
@@ -27,7 +29,7 @@ route.get("/", (req: Request, res: Response) => {
 
 route.get("/health", UtilsController.getHealth);
 
-route.post("/checkUserToAppConn", UtilsController.checkUserToAppConn);
+route.post("/checkUserToAppConn", validate(checkAccessInput), UtilsController.checkUserToAppConn);
 
 route.use("/apps", authMiddleware, app);
 route.use("/users", authMiddleware, user);

@@ -1,20 +1,21 @@
 import { Router } from "express";
 
 import AppController from "../controllers/app.controller";
-import authMiddleware from "../middlewares/auth.middleware";
+import validate from "../validations";
+import { createAppInput, modifyAppInput, deleteAppInput } from "../validations/app.validation";
 
 const userController = new AppController();
 const app = Router();
 
 app.get("/", userController.getApps);
 app.get("/:id", userController.getAppInfo);
-app.post("/", userController.addNewApp);
+app.post("/", validate(createAppInput), userController.addNewApp);
 
-app.post("/addUser", userController.addUserToApp);
-app.post("/removeUser", userController.removeUserFromApp);
-app.post("/addGroup", userController.addGroupToApp);
-app.post("/removeGroup", userController.removeGroupFromApp);
+app.post("/addUser", validate(modifyAppInput), userController.addUserToApp);
+app.post("/removeUser", validate(modifyAppInput), userController.removeUserFromApp);
+app.post("/addGroup", validate(modifyAppInput), userController.addGroupToApp);
+app.post("/removeGroup", validate(modifyAppInput), userController.removeGroupFromApp);
 
-app.delete("/", userController.delete);
+app.delete("/", validate(deleteAppInput), userController.delete);
 
 export default app;

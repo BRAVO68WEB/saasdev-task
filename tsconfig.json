@@ -3,5 +3,12 @@
         "outDir": "./dist",
         "rootDir": "./src"
     },
-    "extends": "@bravo68web/tsconfig/base.json"
+    "extends": "@bravo68web/tsconfig/base.json",
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
 }
