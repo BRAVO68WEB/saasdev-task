@@ -4,25 +4,28 @@ import User from "../models/user.model";
 
 export default class GroupService {
     async getGroups() {
-        let groups : any = await Group.find()
+        let groups: any = await Group.find()
             .populate("source")
             .select("-createdAt -updatedAt")
-            .then(groups => groups.map(group => {
-                return {
-                    ...group.view(true),
-                    source: group.source.name
-                }
-            })
-        );
+            .then(groups =>
+                groups.map(group => {
+                    return {
+                        ...group.view(true),
+                        source: group.source.name,
+                    };
+                }),
+            );
 
         groups = await Promise.all(
             groups.map(async (group: any) => {
-                const usersInGroup = await User.find({ _id: { $in: group.emps } }).select("-source -createdAt -updatedAt").then(users => users.map(user => user.view(true)));
+                const usersInGroup = await User.find({ _id: { $in: group.emps } })
+                    .select("-source -createdAt -updatedAt")
+                    .then(users => users.map(user => user.view(true)));
                 return {
                     ...group,
-                    emps: usersInGroup
-                }
-            })
+                    emps: usersInGroup,
+                };
+            }),
         );
 
         return groups;
@@ -31,17 +34,19 @@ export default class GroupService {
     async getGroupById(id: string) {
         const groupInfo = await Group.findById(id)
             .populate("source")
-            .select("-createdAt -updatedAt")
+            .select("-createdAt -updatedAt");
         if (!groupInfo) {
             throw new Error("Group not found");
         }
         const authorizedApps = await App.find({ authorizedGroups: id }).select("id name");
-        const usersInGroup = await User.find({ _id: { $in: groupInfo.users } }).select("-source -createdAt -updatedAt").then(users => users.map(user => user.view(true)));
+        const usersInGroup = await User.find({ _id: { $in: groupInfo.users } })
+            .select("-source -createdAt -updatedAt")
+            .then(users => users.map(user => user.view(true)));
         return {
             ...groupInfo.view(true),
             apps: authorizedApps.map(app => app.view(true)),
             source: groupInfo.source.name,
-            emps: usersInGroup
+            emps: usersInGroup,
         };
     }
 
